@@ -35,6 +35,15 @@ fn filterByPattern(wordlist: &Vec<String>, pattern: Regex, word_length: usize) -
     filtered
 }
 
+fn find_max_tries(keys: Vec<Vec<String>>) -> u128 {
+    let mut max_tries: u128 = 1;
+    for key in keys {
+        max_tries *= key.len() as u128;
+    }
+
+    max_tries
+}
+
 fn main() {
     let mut file = File::open("bip39Keywords.txt").expect("File not found");
     let mut data = String::new();
@@ -47,7 +56,7 @@ fn main() {
         .collect::<Vec<String>>();
 
     let mnemonic_length = 24;
-    let target_pub_key = String::from("GXHRr8HWs3yA7kbsLfM4d1qSc6XziEJ6PwixbM67t1CZ");
+    let target_pub_key = String::from("FMR2u5HHJDadnDYaHoWGNjVHaNEoSwYohcwMvnLYxm2X");
 
     let keys: Vec<Vec<String>> = vec![
         filterByPattern(&words, Regex::new(r"^[cC].*$").unwrap(), 7),
@@ -75,6 +84,8 @@ fn main() {
         filterByPattern(&words, Regex::new(r"^[mM].*$").unwrap(), 7),
         filterByPattern(&words, Regex::new(r"^[bB].*[xX]$").unwrap(), 3),
     ];
+
+    println!("Max tries: {}", find_max_tries(keys.clone()));
 
     if mnemonic_length == 12 {
         let mut z = 0;
@@ -117,14 +128,15 @@ fn main() {
     
                                                                 match imported_keypiar {
                                                                     Ok(some_keypair) => {
-                                                                        println!("{} seeds checked", z);
                                                                         
                                                                         if some_keypair.pubkey().to_string() == target_pub_key {
                                                                             println!("Found it!");
                                                                             println!("{} seeds checked", z);
                                                                             println!("{}", mnemonic);
-                                          
+                                                                            
                                                                         }
+                                                                        
+                                                                        println!("{} seeds checked", z);
                                                                     }
     
                                                                     Err(e) => {}
