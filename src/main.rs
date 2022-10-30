@@ -1,4 +1,4 @@
-use std::time::{Duration, Instant};
+use std::time::{Instant};
 use bip0039::Mnemonic;
 use solana_sdk::{
     signature::{Keypair, Signer}
@@ -21,7 +21,7 @@ fn filterByLength(wordlist: &Vec<String>, length: usize) -> Vec<String> {
 
 
 
-fn filterByPattern(wordlist: &Vec<String>, pattern: Regex, word_length: usize) -> Vec<String> {
+fn filter_by_pattern(wordlist: &Vec<String>, pattern: Regex, word_length: usize) -> Vec<String> {
 
     let new_word_list = filterByLength(wordlist, word_length);
 
@@ -61,36 +61,45 @@ fn main() {
     let target_pub_key = String::from("FMR2u5HHJDadnDYaHoWGNjVHaNEoSwYohcwMvnLYxm2X");
 
     let keys: Vec<Vec<String>> = vec![
-        filterByPattern(&words, Regex::new(r"^[cC].*$").unwrap(), 7),
-        filterByPattern(&words, Regex::new(r"^[aA].*[rR]$").unwrap(), 3),
-        filterByPattern(&words, Regex::new(r"^[cC].*$").unwrap(), 8),
-        filterByPattern(&words, Regex::new(r"^[oO].*[nN]$").unwrap(), 3),
-        filterByPattern(&words, Regex::new(r"^[pP].*$").unwrap(), 7),
-        filterByPattern(&words, Regex::new(r"^[lL].*$").unwrap(), 4),
-        filterByPattern(&words, Regex::new(r"^[cC].*$").unwrap(), 5),
-        filterByPattern(&words, Regex::new(r"^[sS].*$").unwrap(), 4),
-        filterByPattern(&words, Regex::new(r"^[tT].*$").unwrap(), 5),
-        filterByPattern(&words, Regex::new(r"^[bB].*$").unwrap(), 5),
-        filterByPattern(&words, Regex::new(r"^[rR].*$").unwrap(), 4),
-        filterByPattern(&words, Regex::new(r"^[jJ].*$").unwrap(), 5),
-        filterByPattern(&words, Regex::new(r"^[mM].*$").unwrap(), 5),
-        filterByPattern(&words, Regex::new(r"^[sS].*$").unwrap(), 6),
-        filterByPattern(&words, Regex::new(r"^[jJ].*$").unwrap(), 5),
-        filterByPattern(&words, Regex::new(r"^[rR].*$").unwrap(), 7),
-        filterByPattern(&words, Regex::new(r"^[pP].*$").unwrap(), 7),
-        filterByPattern(&words, Regex::new(r"^[tT].*$").unwrap(), 6),
-        filterByPattern(&words, Regex::new(r"^[sS].*$").unwrap(), 5),
-        filterByPattern(&words, Regex::new(r"^[dD].*$").unwrap(), 6),
-        filterByPattern(&words, Regex::new(r"^[tT].*[yY]$").unwrap(), 3),
-        filterByPattern(&words, Regex::new(r"^[pP].*$").unwrap(), 7),
-        filterByPattern(&words, Regex::new(r"^[mM].*$").unwrap(), 7),
-        filterByPattern(&words, Regex::new(r"^[bB].*[xX]$").unwrap(), 3),
+        filter_by_pattern(&words, Regex::new(r"^[cC].*$").unwrap(), 7),
+        filter_by_pattern(&words, Regex::new(r"^[aA].*[rR]$").unwrap(), 3),
+        filter_by_pattern(&words, Regex::new(r"^[cC].*$").unwrap(), 8),
+        filter_by_pattern(&words, Regex::new(r"^[oO].*[nN]$").unwrap(), 3),
+        filter_by_pattern(&words, Regex::new(r"^[pP].*$").unwrap(), 7),
+        filter_by_pattern(&words, Regex::new(r"^[lL].*$").unwrap(), 4),
+        filter_by_pattern(&words, Regex::new(r"^[cC].*$").unwrap(), 5),
+        filter_by_pattern(&words, Regex::new(r"^[sS].*$").unwrap(), 4),
+        filter_by_pattern(&words, Regex::new(r"^[tT].*$").unwrap(), 5),
+        filter_by_pattern(&words, Regex::new(r"^[bB].*$").unwrap(), 5),
+        filter_by_pattern(&words, Regex::new(r"^[rR].*$").unwrap(), 4),
+        filter_by_pattern(&words, Regex::new(r"^[jJ].*$").unwrap(), 5),
+        filter_by_pattern(&words, Regex::new(r"^[mM].*$").unwrap(), 5),
+        filter_by_pattern(&words, Regex::new(r"^[sS].*$").unwrap(), 6),
+        filter_by_pattern(&words, Regex::new(r"^[jJ].*$").unwrap(), 5),
+        filter_by_pattern(&words, Regex::new(r"^[rR].*$").unwrap(), 7),
+        filter_by_pattern(&words, Regex::new(r"^[pP].*$").unwrap(), 7),
+        filter_by_pattern(&words, Regex::new(r"^[tT].*$").unwrap(), 6),
+        filter_by_pattern(&words, Regex::new(r"^[sS].*$").unwrap(), 5),
+        filter_by_pattern(&words, Regex::new(r"^[dD].*$").unwrap(), 6),
+        filter_by_pattern(&words, Regex::new(r"^[tT].*[yY]$").unwrap(), 3),
+        filter_by_pattern(&words, Regex::new(r"^[pP].*$").unwrap(), 7),
+        filter_by_pattern(&words, Regex::new(r"^[mM].*$").unwrap(), 7),
+        filter_by_pattern(&words, Regex::new(r"^[bB].*[xX]$").unwrap(), 3),
     ];
 
-    println!("Max tries: {}", find_max_tries(keys.clone()));
+    let max_tries = find_max_tries(keys.clone());
+    println!("Max tries: {}", max_tries);
+
+    let avg_time_for_100000_tries = 68.305335004;
+    let time_per_seed = avg_time_for_100000_tries / 100000.0;
+
+    // estimated time in hours
+    let estimated_time = time_per_seed * max_tries as f64  / 3600.0;
+
+    println!("Estimated time: {} hours", estimated_time);
+    let mut z = 0;
 
     if mnemonic_length == 12 {
-        let mut z = 0;
         for a in 0..keys[0].len() {
             for b in 0..keys[1].len() {
                 for c in 0..keys[2].len() {
@@ -103,7 +112,9 @@ fn main() {
                                             for j in 0..keys[9].len() {
                                                 for k in 0..keys[10].len() {
                                                     for l in 0..keys[11].len() {
+
                                                         z += 1;
+
                                                         let mnemonic = format!(
                                                             "{} {} {} {} {} {} {} {} {} {} {} {}",
                                                             keys[0][a],
@@ -136,15 +147,18 @@ fn main() {
                                                                             println!("{} seeds checked", z);
                                                                             println!("{}", mnemonic);
                                                                             
+                                                                            let duration = start.elapsed();
+                                                                            println!("Time elapsed in main() is: {:?}", duration);
+                                                                            return;
                                                                         }
 
                                                                         println!("{} seeds checked", z);
                                                                     }
     
-                                                                    Err(e) => {}
+                                                                    Err(_e) => {}
                                                                 }
                                                             }
-                                                            Err(e) => {}
+                                                            Err(_e) => {}
                                                         }
                                                     }
                                                 }
@@ -159,7 +173,6 @@ fn main() {
             }
         }
     } else if mnemonic_length == 24 {
-        let mut z = 0;
         for a in 0..keys[0].len() {
             for b in 0..keys[1].len() {
                 for c in 0..keys[2].len() {
@@ -184,6 +197,7 @@ fn main() {
                                                                                             for v in 0..keys[21].len() {
                                                                                                 for w in 0..keys[22].len() {
                                                                                                     for x in 0..keys[23].len() {
+                                                                                                                                                                                                                
                                                                                                         z += 1;
                                                                                                         let mnemonic = format!(
                                                                                                             "{} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {} {}",
@@ -229,14 +243,18 @@ fn main() {
                                                                                                                             println!("Found it!");
                                                                                                                             println!("{} seeds checked", z);
                                                                                                                             println!("{}", mnemonic);
+
+                                                                                                                            let duration = start.elapsed();
+                                                                                                                            println!("Time elapsed in main() is: {:?}", duration);
+                                                                                                                            return;
                                                                                           
                                                                                                                         }
                                                                                                                     }
                                                     
-                                                                                                                    Err(e) => {}
+                                                                                                                    Err(_e) => {}
                                                                                                                 }
                                                                                                             }
-                                                                                                            Err(e) => {}
+                                                                                                            Err(_e) => {}
                                                                                                         }
                                                                                                     }
                                                                                                 }
