@@ -1654,6 +1654,7 @@ name = "wordcell-solver"
 version = "0.1.0"
 dependencies = [
  "bip0039",
+ "regex",
  "solana-sdk",
 ]
 

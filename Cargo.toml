@@ -8,3 +8,4 @@ edition = "2021"
 [dependencies]
 bip0039 = "0.10.1"
 solana-sdk = "1.14.5"
+regex = "1"
