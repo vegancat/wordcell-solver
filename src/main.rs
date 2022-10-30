@@ -1,3 +1,4 @@
+use std::time::{Duration, Instant};
 use bip0039::Mnemonic;
 use solana_sdk::{
     signature::{Keypair, Signer}
@@ -45,6 +46,7 @@ fn find_max_tries(keys: Vec<Vec<String>>) -> u128 {
 }
 
 fn main() {
+    let start = Instant::now();
     let mut file = File::open("bip39Keywords.txt").expect("File not found");
     let mut data = String::new();
     file.read_to_string(&mut data)
@@ -135,7 +137,7 @@ fn main() {
                                                                             println!("{}", mnemonic);
                                                                             
                                                                         }
-                                                                        
+
                                                                         println!("{} seeds checked", z);
                                                                     }
     
@@ -263,6 +265,7 @@ fn main() {
     }
 
                                                                                                         
-                                                                                                    
-    // println!("{:?}", words);
+    let duration = start.elapsed();
+    println!("Time elapsed in main() is: {:?}", duration);
+                                                                                    
 }
